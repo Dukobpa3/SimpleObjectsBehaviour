@@ -8,17 +8,17 @@ public class ABehaviour
     [SerializeField] private float _time;
     [SerializeField] private BehaviourType _behaviourType;
     [SerializeField] private Transform _transformTarget;
-    [SerializeField] private Vector3 _coordTarget;
+    [SerializeField] private Vector3 _vector3Target;
     [SerializeField] private Color _colorTarget;
 
     public BehaviourType Type => _behaviourType;
-    
+
     public BehaviourParameters Parameters => new()
     {
         Time = _time,
-        
+
         Transform = _transformTarget,
-        Coord = _coordTarget,
+        Coord = _vector3Target,
         Color = _colorTarget,
     };
 }

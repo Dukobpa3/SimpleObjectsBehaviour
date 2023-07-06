@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class BehaviourProcessor : MonoBehaviour
 {
+    [SerializeField] private bool _playLoop;
     [SerializeField] private List<ABehaviour> _behaviours;
 
     private readonly Dictionary<BehaviourType, IBehaviour> _strategies = new Dictionary<BehaviourType, IBehaviour>()
@@ -18,7 +19,9 @@ public class BehaviourProcessor : MonoBehaviour
 
     private void Start()
     {
-        PlaySequence().Forget();
+        PlaySequence()
+           .AttachExternalCancellation(this.GetCancellationTokenOnDestroy())
+           .Forget();
     }
 
     private async UniTask PlaySequence()
@@ -27,6 +30,12 @@ public class BehaviourProcessor : MonoBehaviour
         {
             await _strategies[behaviour.Type].Play(gameObject, behaviour.Parameters)
                                              .AttachExternalCancellation(this.GetCancellationTokenOnDestroy());
+        }
+
+        if (_playLoop)
+        {
+            await PlaySequence()
+               .AttachExternalCancellation(this.GetCancellationTokenOnDestroy());
         }
     }
 }
